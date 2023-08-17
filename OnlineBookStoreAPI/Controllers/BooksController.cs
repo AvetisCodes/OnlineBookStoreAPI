@@ -2,7 +2,9 @@
 using Microsoft.EntityFrameworkCore;
 using OnlineBookStoreAPI.Data.Models;
 using OnlineBookStoreAPI.Data;
+using Microsoft.AspNetCore.Authorization;
 
+[Authorize]
 [Route("api/[controller]")]
 [ApiController]
 public class BooksController : ControllerBase
@@ -15,7 +17,7 @@ public class BooksController : ControllerBase
     }
 
     // GET: api/books
-    [HttpGet]
+    [HttpGet("secure-endpoint")]
     public ActionResult<IEnumerable<Book>> GetBooks()
     {
         return _context.Books
