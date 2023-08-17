@@ -3,7 +3,6 @@ using OnlineBookStoreAPI.Data;
 using Microsoft.AspNetCore.Identity;
 using OnlineBookStoreAPI.Data.Models;
 using Microsoft.OpenApi.Models;
-using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,7 +25,12 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
     options.Cookie.SameSite = SameSiteMode.Lax;
     options.SlidingExpiration = true;
-    options.ExpireTimeSpan = TimeSpan.FromMinutes(60); 
+    options.ExpireTimeSpan = TimeSpan.FromMinutes(60);
+    options.Events.OnRedirectToLogin = context =>
+    {
+        context.Response.StatusCode = 401;
+        return Task.CompletedTask;
+    };
 });
 
 builder.Services.AddSwaggerGen(c =>
@@ -53,7 +57,7 @@ app.UseSwagger();
 app.UseSwaggerUI(c =>
 {
     c.SwaggerEndpoint("/swagger/v1/swagger.json", "OnlineBookStoreAPI V1");
-    c.RoutePrefix = string.Empty;  // Set this to serve the Swagger UI at the app's root
+    c.RoutePrefix = string.Empty; // Set this to serve the Swagger UI at the app's root
 });
 
 app.Run();

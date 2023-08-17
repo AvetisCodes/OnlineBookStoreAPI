@@ -4,7 +4,6 @@ using OnlineBookStoreAPI.Data.Models;
 using OnlineBookStoreAPI.Data;
 using Microsoft.AspNetCore.Authorization;
 
-[Authorize]
 [Route("api/[controller]")]
 [ApiController]
 public class BooksController : ControllerBase
@@ -17,7 +16,8 @@ public class BooksController : ControllerBase
     }
 
     // GET: api/books
-    [HttpGet("secure-endpoint")]
+    [Authorize]
+    [HttpGet]
     public ActionResult<IEnumerable<Book>> GetBooks()
     {
         return _context.Books
@@ -27,6 +27,7 @@ public class BooksController : ControllerBase
     }
 
     // GET: api/books/5
+    [Authorize]
     [HttpGet("{id}")]
     public ActionResult<Book> GetBook(int id)
     {
