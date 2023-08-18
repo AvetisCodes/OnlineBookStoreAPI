@@ -2,7 +2,7 @@
 
 public class Book
 {
-    public int Id { get; set; }
+    public string Id { get; set; } = string.Empty;
 
     public string Title { get; set; } = string.Empty;
     
@@ -14,6 +14,6 @@ public class Book
 
     // Navigational properties
     public List<OrderDetail> OrderDetails { get; set; } = new();
-    
+
     public List<Review> Reviews { get; set; } = new();
 }

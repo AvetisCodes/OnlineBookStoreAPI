@@ -28,6 +28,10 @@ public class AppDbContext : IdentityDbContext<User>
         modelBuilder.Entity<IdentityUserRole<string>>().ToTable("UserRoles");
         modelBuilder.Entity<IdentityRole>().ToTable("Roles");
 
+        // Book configuration
+        modelBuilder.Entity<Book>().ToTable("Books");
+        modelBuilder.Entity<Book>().HasKey(e => e.Id);
+
         // Order relationship
         modelBuilder.Entity<Order>().HasOne(o => o.User).WithMany(u => u.Orders);
 

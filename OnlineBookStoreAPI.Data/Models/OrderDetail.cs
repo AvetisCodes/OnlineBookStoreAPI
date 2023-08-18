@@ -2,11 +2,11 @@
 
 public class OrderDetail
 {
-    public int Id { get; set; }
+    public string Id { get; set; } = string.Empty;
     
-    public int OrderId { get; set; }
+    public string OrderId { get; set; } = string.Empty;
     
-    public int BookId { get; set; }
+    public string BookId { get; set; } = string.Empty;
     
     public int Quantity { get; set; }
 

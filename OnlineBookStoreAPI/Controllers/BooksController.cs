@@ -29,7 +29,7 @@ public class BooksController : ControllerBase
     // GET: api/books/5
     [Authorize]
     [HttpGet("{id}")]
-    public ActionResult<Book> GetBook(int id)
+    public ActionResult<Book> GetBook(string id)
     {
         var book = _context.Books.Find(id);
 
@@ -53,7 +53,7 @@ public class BooksController : ControllerBase
 
     // PUT: api/books/5
     [HttpPut("{id}")]
-    public IActionResult UpdateBook(int id, Book book)
+    public IActionResult UpdateBook(string id, Book book)
     {
         if (id != book.Id)
         {
@@ -81,7 +81,7 @@ public class BooksController : ControllerBase
         return NoContent();
     }
 
-    private bool BookExists(int id)
+    private bool BookExists(string id)
     {
         return _context.Books.Any(e => e.Id == id);
     }

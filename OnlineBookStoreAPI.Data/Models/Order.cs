@@ -2,9 +2,9 @@
 
 public class Order
 {
-    public int Id { get; set; }
+    public string Id { get; set; } = string.Empty;
     
-    public int UserId { get; set; }
+    public string UserId { get; set; } = string.Empty;
     
     public DateTime OrderDate { get; set; }
     

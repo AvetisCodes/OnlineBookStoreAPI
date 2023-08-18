@@ -35,7 +35,7 @@ namespace OnlineBookStoreAPI.Controllers
 
         // GET: api/Reviews/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Review>> GetReview(int id)
+        public async Task<ActionResult<Review>> GetReview(string id)
         {
             var review = await _context.Reviews.FindAsync(id);
 
