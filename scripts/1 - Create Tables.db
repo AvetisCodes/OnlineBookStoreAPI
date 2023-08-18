@@ -1,0 +1,75 @@
+CREATE TABLE Books (
+    Id TEXT NOT NULL PRIMARY KEY,
+    Title TEXT NOT NULL,
+    Author TEXT NOT NULL,
+    ISBN TEXT UNIQUE,
+    Price REAL NOT NULL
+);
+
+CREATE TABLE Orders (
+    Id TEXT NOT NULL PRIMARY KEY,
+    UserId TEXT,
+    OrderDate TEXT NOT NULL, -- Usually an ISO-8601 format date string
+    TotalPrice REAL NOT NULL,
+    FOREIGN KEY (UserId) REFERENCES Users(Id)
+);
+
+CREATE TABLE OrderDetails (
+    Id TEXT NOT NULL PRIMARY KEY,
+    OrderId TEXT,
+    BookId TEXT,
+    Quantity INTEGER NOT NULL,
+    FOREIGN KEY (OrderId) REFERENCES Orders(Id),
+    FOREIGN KEY (BookId) REFERENCES Books(Id)
+);
+
+CREATE TABLE Reviews (
+    Id TEXT NOT NULL PRIMARY KEY,
+    BookId TEXT,
+    UserId TEXT,
+    Rating INTEGER NOT NULL, -- Assuming a rating out of 5 or 10
+    Text TEXT,
+    FOREIGN KEY (BookId) REFERENCES Books(Id),
+    FOREIGN KEY (UserId) REFERENCES Users(Id)
+);
+
+CREATE TABLE Roles (
+    Id TEXT NOT NULL PRIMARY KEY,
+    Name TEXT(256) NULL,
+    NormalizedName TEXT(256) NULL,
+    ConcurrencyStamp TEXT NULL
+);
+
+CREATE TABLE UserClaims (
+    Id TEXT NOT NULL PRIMARY KEY,
+    UserId TEXT NOT NULL,
+    ClaimType TEXT NOT NULL,
+    ClaimValue TEXT NOT NULL,
+    FOREIGN KEY(UserId) REFERENCES Users(Id) ON DELETE CASCADE
+);
+
+CREATE TABLE UserRoles (
+    UserId TEXT NOT NULL,
+    RoleId TEXT NOT NULL,
+    PRIMARY KEY (UserId, RoleId),
+    FOREIGN KEY(UserId) REFERENCES Users(Id) ON DELETE CASCADE,
+    FOREIGN KEY(RoleId) REFERENCES Roles(Id) ON DELETE CASCADE
+);
+
+CREATE TABLE "Users" (
+	"Id"	TEXT NOT NULL PRIMARY KEY,
+	"UserName"	TEXT,
+	"NormalizedUserName"	TEXT UNIQUE,
+	"Email"	NUMERIC,
+	"NormalizedEmail"	TEXT UNIQUE,
+	"EmailConfirmed"	INTEGER NOT NULL DEFAULT 0,
+	"PasswordHash"	TEXT,
+	"SecurityStamp"	TEXT,
+	"ConcurrencyStamp"	TEXT,
+	"PhoneNumber"	TEXT,
+	"PhoneNumberConfirmed"	INTEGER NOT NULL DEFAULT 0,
+	"TwoFactorEnabled"	INTEGER NOT NULL DEFAULT 0,
+	"LockoutEnd"	TEXT,
+	"LockoutEnabled"	INTEGER NOT NULL DEFAULT 0,
+	"AccessFailedCount"	INTEGER NOT NULL DEFAULT 0
+);
