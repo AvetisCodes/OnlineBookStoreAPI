@@ -2,7 +2,6 @@
 using Microsoft.EntityFrameworkCore;
 using OnlineBookStoreAPI.Data.Models;
 using OnlineBookStoreAPI.Data;
-using Microsoft.AspNetCore.Authorization;
 
 [Route("api/[controller]")]
 [ApiController]
@@ -16,7 +15,6 @@ public class BooksController : ControllerBase
     }
 
     // GET: api/books
-    [Authorize]
     [HttpGet]
     public ActionResult<IEnumerable<Book>> GetBooks()
     {
@@ -27,7 +25,6 @@ public class BooksController : ControllerBase
     }
 
     // GET: api/books/5
-    [Authorize]
     [HttpGet("{id}")]
     public ActionResult<Book> GetBook(string id)
     {
@@ -39,50 +36,5 @@ public class BooksController : ControllerBase
         }
 
         return book;
-    }
-
-    // POST: api/books
-    [HttpPost]
-    public ActionResult<Book> CreateBook(Book book)
-    {
-        _context.Books.Add(book);
-        _context.SaveChanges();
-
-        return CreatedAtAction("GetBook", new { id = book.Id }, book);
-    }
-
-    // PUT: api/books/5
-    [HttpPut("{id}")]
-    public IActionResult UpdateBook(Guid id, Book book)
-    {
-        if (id != book.Id)
-        {
-            return BadRequest();
-        }
-
-        _context.Entry(book).State = EntityState.Modified;
-
-        try
-        {
-            _context.SaveChanges();
-        }
-        catch (DbUpdateConcurrencyException)
-        {
-            if (!BookExists(id))
-            {
-                return NotFound();
-            }
-            else
-            {
-                throw;
-            }
-        }
-
-        return NoContent();
-    }
-
-    private bool BookExists(Guid id)
-    {
-        return _context.Books.Any(e => e.Id == id);
     }
 }
