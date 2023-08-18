@@ -53,7 +53,7 @@ public class BooksController : ControllerBase
 
     // PUT: api/books/5
     [HttpPut("{id}")]
-    public IActionResult UpdateBook(string id, Book book)
+    public IActionResult UpdateBook(Guid id, Book book)
     {
         if (id != book.Id)
         {
@@ -81,7 +81,7 @@ public class BooksController : ControllerBase
         return NoContent();
     }
 
-    private bool BookExists(string id)
+    private bool BookExists(Guid id)
     {
         return _context.Books.Any(e => e.Id == id);
     }

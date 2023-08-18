@@ -5,7 +5,7 @@ using OnlineBookStoreAPI.Data.Models;
 
 namespace OnlineBookStoreAPI.Data;
 
-public class AppDbContext : IdentityDbContext<User>
+public class AppDbContext : IdentityDbContext<User, IdentityRole<Guid>, Guid>
 {
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
@@ -24,9 +24,9 @@ public class AppDbContext : IdentityDbContext<User>
         // User configuration
         modelBuilder.Entity<User>().ToTable("Users");
         modelBuilder.Entity<User>().HasKey(e => e.Id);
-        modelBuilder.Entity<IdentityUserClaim<string>>().ToTable("UserClaims");
-        modelBuilder.Entity<IdentityUserRole<string>>().ToTable("UserRoles");
-        modelBuilder.Entity<IdentityRole>().ToTable("Roles");
+        modelBuilder.Entity<IdentityUserClaim<Guid>>().ToTable("UserClaims");
+        modelBuilder.Entity<IdentityUserRole<Guid>>().ToTable("UserRoles");
+        modelBuilder.Entity<IdentityRole<Guid>>().ToTable("Roles");
 
         // Book configuration
         modelBuilder.Entity<Book>().ToTable("Books");

@@ -40,7 +40,7 @@ namespace OnlineBookStoreAPI.Controllers
 
         // GET: api/Orders/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Order>> GetOrder(string id)
+        public async Task<ActionResult<Order>> GetOrder(Guid id)
         {
             var order = await _context.Orders.Include(o => o.OrderDetails).FirstOrDefaultAsync(o => o.Id == id);
 
