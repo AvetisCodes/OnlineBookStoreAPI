@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using OnlineBookStoreAPI.Data.Models;
 using OnlineBookStoreAPI.Data;
+using OnlineBookStoreAPI.Data.DTOs;
 
 namespace OnlineBookStoreAPI.Controllers
 {
@@ -20,67 +21,48 @@ namespace OnlineBookStoreAPI.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Review>>> GetReviews()
         {
-            return await _context.Reviews
-                .Select(r => new Review
-                {
-                    Id = r.Id,
-                    BookId = r.BookId,
-                    UserId = r.UserId,
-                    Rating = r.Rating,
-                    Text = r.Text,
-                    // You can add navigation properties as needed
-                })
-                .ToListAsync();
+            return await _context.Reviews.ToListAsync();
         }
 
         // GET: api/Reviews/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Review>> GetReview(string id)
+        public async Task<ActionResult<Review>> GetReview(Guid id)
         {
-            var review = await _context.Reviews.FindAsync(id);
+            var review = await _context.Reviews.FirstOrDefaultAsync(r => r.Id == id);
 
             if (review == null)
             {
                 return NotFound();
             }
 
-            var reviewDto = new Review
-            {
-                Id = review.Id,
-                BookId = review.BookId,
-                UserId = review.UserId,
-                Rating = review.Rating,
-                Text = review.Text,
-                // Navigation properties as needed
-            };
-
-            return reviewDto;
+            return review;
         }
 
         // POST: api/Reviews
         [HttpPost]
-        public async Task<ActionResult<Review>> PostReview(Review reviewDto)
+        public async Task<ActionResult<Review>> PostReview(ReviewDTO reviewDto)
         {
-            var review = new Review
+            var reviewModel = new Review
             {
+                Id = Guid.NewGuid(),
                 BookId = reviewDto.BookId,
                 UserId = reviewDto.UserId,
                 Rating = reviewDto.Rating,
                 Text = reviewDto.Text
             };
 
-            _context.Reviews.Add(review);
+            _context.Reviews.Add(reviewModel);
             await _context.SaveChangesAsync();
 
-            reviewDto.Id = review.Id;
-            return CreatedAtAction(nameof(GetReview), new { id = review.Id }, reviewDto);
+            return CreatedAtAction(nameof(GetReview), new { id = reviewModel.Id }, reviewDto);
         }
 
         // DELETE: api/Reviews/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteReview(int id)
+        public async Task<IActionResult> DeleteReview(Guid id)
         {
             var review = await _context.Reviews.FindAsync(id);
+
             if (review == null)
             {
                 return NotFound();

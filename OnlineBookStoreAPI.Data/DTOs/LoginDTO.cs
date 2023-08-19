@@ -2,7 +2,7 @@
 
 namespace OnlineBookStoreAPI.Data.DTOs;
 
-public class LoginModel
+public class LoginDTO
 {
     [Required]
     [EmailAddress]
