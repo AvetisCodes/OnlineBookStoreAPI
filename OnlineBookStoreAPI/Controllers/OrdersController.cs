@@ -2,6 +2,9 @@
 using Microsoft.EntityFrameworkCore;
 using OnlineBookStoreAPI.Data.Models;
 using OnlineBookStoreAPI.Data;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
+using OnlineBookStoreAPI.Data.DTOs;
 
 namespace OnlineBookStoreAPI.Controllers
 {
@@ -16,39 +19,80 @@ namespace OnlineBookStoreAPI.Controllers
             this.context = context;
         }
 
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Order>> GetOrder(Guid id)
+        [Authorize]
+        [HttpGet("MyOrders")]
+        public async Task<ActionResult<IEnumerable<Order>>> GetUserOrders()
         {
-            var order = await context.Orders.Include(o => o.OrderDetails).FirstOrDefaultAsync(o => o.Id == id);
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            if (order == null)
+            if (userId is null)
             {
-                return NotFound();
+                return Unauthorized();
             }
 
-            return order;
+            var orders = await context.Orders.Include(o => o.OrderDetails).Where(r => r.UserId == new Guid(userId)).ToListAsync();
+
+            return Ok(orders);
         }
 
-        //[HttpPost]
-        //public async Task<ActionResult<Order>> PostOrder(Order orderDto)
-        //{
-        //    var order = new Order
-        //    {
-        //        UserId = orderDto.UserId,
-        //        OrderDate = orderDto.OrderDate,
-        //        TotalPrice = orderDto.TotalPrice,
-        //        OrderDetails = orderDto.OrderDetails.Select(od => new OrderDetail
-        //        {
-        //            BookId = od.BookId,
-        //            Quantity = od.Quantity
-        //        }).ToList()
-        //    };
+        [Authorize]
+        [HttpPost("MyOrders")]
+        public async Task<ActionResult<Order>> PostOrder(OrderDTO orderDto)
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-        //    context.Orders.Add(order);
-        //    await context.SaveChangesAsync();
+            if (userId is null)
+            {
+                return Unauthorized();
+            }
 
-        //    orderDto.Id = order.Id;
-        //    return CreatedAtAction(nameof(GetOrder), new { id = order.Id }, orderDto);
-        //}
+            var currentUserModel = await context.Users.FindAsync(new Guid(userId));
+
+            if (currentUserModel == null)
+            {
+                return NotFound("User not found.");
+            }
+
+            // Fetch actual books based on BookId
+            var bookIds = orderDto.OrderDetailDTOs.Select(od => od.BookId).ToList();
+            var books = await context.Books.Where(b => bookIds.Contains(b.Id)).ToDictionaryAsync(b => b.Id);
+
+            // Calculate TotalPrice based on actual book prices
+            double totalPrice = 0;
+            var orderDetails = new List<OrderDetail>();
+
+            foreach (var orderDetailDto in orderDto.OrderDetailDTOs)
+            {
+                if (!books.ContainsKey(orderDetailDto.BookId))
+                {
+                    return BadRequest($"Book with ID {orderDetailDto.BookId} not found.");
+                }
+
+                var book = books[orderDetailDto.BookId];
+                totalPrice += book.Price * orderDetailDto.Quantity;
+
+                orderDetails.Add(new OrderDetail
+                {
+                    Book = book,
+                    Quantity = orderDetailDto.Quantity
+                });
+            }
+
+            var orderModel = new Order
+            {
+                Id = Guid.NewGuid(),
+                User = currentUserModel,
+                OrderDate = orderDto.OrderDate,
+                TotalPrice = totalPrice,
+                OrderDetails = orderDetails
+            };
+
+            context.Orders.Add(orderModel);
+            await context.SaveChangesAsync();
+
+            var foundOrder = await context.Orders.Include(o => o.OrderDetails).SingleOrDefaultAsync(r => r.Id == orderModel.Id);
+
+            return Ok(foundOrder);
+        }
     }
 }

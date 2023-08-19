@@ -29,7 +29,7 @@ public class BooksController : ControllerBase
     {
         var topBooks = await bookService.GetTopBooksAsync(topNumber);
 
-        return topBooks;
+        return Ok(topBooks);
     }
 
     [HttpGet("{id}")]
@@ -42,6 +42,6 @@ public class BooksController : ControllerBase
             return NotFound();
         }
 
-        return foundBook;
+        return Ok(foundBook);
     }
 }
