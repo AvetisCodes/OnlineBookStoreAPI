@@ -13,14 +13,12 @@ public class BooksController : ControllerBase
         _context = context;
     }
 
-    // GET: api/books
     [HttpGet]
     public ActionResult<IEnumerable<Book>> GetBooks()
     {
         return _context.Books.ToList();
     }
 
-    // GET: api/books/5
     [HttpGet("{id}")]
     public ActionResult<Book> GetBook(Guid id)
     {
