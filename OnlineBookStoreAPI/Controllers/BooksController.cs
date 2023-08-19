@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using OnlineBookStoreAPI.Data.Models;
 using OnlineBookStoreAPI.Data;
 
@@ -18,20 +17,14 @@ public class BooksController : ControllerBase
     [HttpGet]
     public ActionResult<IEnumerable<Book>> GetBooks()
     {
-        return _context.Books
-            .Include(b => b.OrderDetails)
-            .Include(b => b.Reviews)
-            .ToList();
+        return _context.Books.ToList();
     }
 
     // GET: api/books/5
     [HttpGet("{id}")]
     public ActionResult<Book> GetBook(Guid id)
     {
-        var book = _context.Books
-            .Include(b => b.OrderDetails)
-            .Include(b => b.Reviews)
-            .FirstOrDefault(b => b.Id == id);
+        var book = _context.Books.FirstOrDefault(b => b.Id == id);
 
         if (book == null)
         {
