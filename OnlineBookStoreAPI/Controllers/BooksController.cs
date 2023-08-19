@@ -35,13 +35,13 @@ public class BooksController : ControllerBase
     [HttpGet("{id}")]
     public async Task<ActionResult<Book>> GetBook(Guid id)
     {
-        var book = await context.Books.FirstOrDefaultAsync(b => b.Id == id);
+        var foundBook = await context.Books.FirstOrDefaultAsync(b => b.Id == id);
 
-        if (book == null)
+        if (foundBook == null)
         {
             return NotFound();
         }
 
-        return book;
+        return foundBook;
     }
 }
