@@ -51,8 +51,8 @@ namespace OnlineBookStoreAPI.Controllers
         }
 
         [Authorize]
-        [HttpPost("MyReview")]
-        public async Task<ActionResult<Review>> PostUserReview(ReviewDTO reviewDto)
+        [HttpPost("MyReview/{bookId}")]
+        public async Task<ActionResult<Review>> PostUserReview(Guid bookId, [FromBody] ReviewDTO reviewDto)
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
@@ -61,20 +61,40 @@ namespace OnlineBookStoreAPI.Controllers
                 return Unauthorized();
             }
 
+            if (reviewDto.Rating < 0 || reviewDto.Rating > 5)
+            {
+                throw new InvalidDataException("Ratings can only be between 0-5.");
+            }
+
+            var existingBook = await context.Books.FindAsync(bookId);
+
+            if (existingBook == null)
+            {
+                return NotFound("Book not found.");
+            }
+
+            var currentUserModel = await context.Users.FindAsync(new Guid(userId));
+
+            if (currentUserModel == null)
+            {
+                return NotFound("User not found.");
+            }
+
             var reviewModel = new Review
             {
                 Id = Guid.NewGuid(),
-                BookId = reviewDto.BookId,
-                UserId = new Guid(userId),
+                Book = existingBook,
+                User = currentUserModel,
                 Rating = reviewDto.Rating,
                 Text = reviewDto.Text
             };
 
+            context.Reviews.Add(reviewModel);
             await context.SaveChangesAsync();
 
-            var myNewReview = await context.Reviews.FirstOrDefaultAsync(r => r.Id == reviewModel.Id);
+            var foundReview = await context.Reviews.FirstOrDefaultAsync(b => b.Id == reviewModel.Id);
 
-            return Ok(reviewDto);
+            return Ok(foundReview);
         }
 
         [Authorize]

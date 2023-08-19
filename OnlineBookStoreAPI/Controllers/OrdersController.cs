@@ -26,43 +26,29 @@ namespace OnlineBookStoreAPI.Controllers
                 return NotFound();
             }
 
-            var orderDto = new Order
-            {
-                Id = order.Id,
-                UserId = order.UserId,
-                OrderDate = order.OrderDate,
-                TotalPrice = order.TotalPrice,
-                OrderDetails = order.OrderDetails.Select(od => new OrderDetail
-                {
-                    Id = od.Id,
-                    BookId = od.BookId,
-                    Quantity = od.Quantity
-                }).ToList()
-            };
-
-            return orderDto;
+            return order;
         }
 
-        [HttpPost]
-        public async Task<ActionResult<Order>> PostOrder(Order orderDto)
-        {
-            var order = new Order
-            {
-                UserId = orderDto.UserId,
-                OrderDate = orderDto.OrderDate,
-                TotalPrice = orderDto.TotalPrice,
-                OrderDetails = orderDto.OrderDetails.Select(od => new OrderDetail
-                {
-                    BookId = od.BookId,
-                    Quantity = od.Quantity
-                }).ToList()
-            };
+        //[HttpPost]
+        //public async Task<ActionResult<Order>> PostOrder(Order orderDto)
+        //{
+        //    var order = new Order
+        //    {
+        //        UserId = orderDto.UserId,
+        //        OrderDate = orderDto.OrderDate,
+        //        TotalPrice = orderDto.TotalPrice,
+        //        OrderDetails = orderDto.OrderDetails.Select(od => new OrderDetail
+        //        {
+        //            BookId = od.BookId,
+        //            Quantity = od.Quantity
+        //        }).ToList()
+        //    };
 
-            context.Orders.Add(order);
-            await context.SaveChangesAsync();
+        //    context.Orders.Add(order);
+        //    await context.SaveChangesAsync();
 
-            orderDto.Id = order.Id;
-            return CreatedAtAction(nameof(GetOrder), new { id = order.Id }, orderDto);
-        }
+        //    orderDto.Id = order.Id;
+        //    return CreatedAtAction(nameof(GetOrder), new { id = order.Id }, orderDto);
+        //}
     }
 }

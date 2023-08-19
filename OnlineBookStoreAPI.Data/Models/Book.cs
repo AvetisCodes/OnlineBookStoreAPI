@@ -12,7 +12,6 @@ public class Book
 
     public double Price { get; set; }
 
-    // Navigational properties
     public List<OrderDetail> OrderDetails { get; set; } = new();
 
     public List<Review> Reviews { get; set; } = new();
