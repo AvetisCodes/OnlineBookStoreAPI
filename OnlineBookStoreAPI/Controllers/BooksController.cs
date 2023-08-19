@@ -26,9 +26,12 @@ public class BooksController : ControllerBase
 
     // GET: api/books/5
     [HttpGet("{id}")]
-    public ActionResult<Book> GetBook(string id)
+    public ActionResult<Book> GetBook(Guid id)
     {
-        var book = _context.Books.Find(id);
+        var book = _context.Books
+            .Include(b => b.OrderDetails)
+            .Include(b => b.Reviews)
+            .FirstOrDefault(b => b.Id == id);
 
         if (book == null)
         {

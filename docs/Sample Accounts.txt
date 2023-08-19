@@ -1,0 +1,39 @@
+User 1:
+username: bookLover123@booktalk.com
+password: Something123!
+
+User 2:
+username: reviewer190@reviewworld.com
+password: Reviewing789!
+
+User 3:
+username: ReadNReview03@booktalk.com
+password: BookLover$325
+
+User 4:
+username: BookBlogger04@litlover.net
+password: PageTurner#428
+
+User 5:
+username: LitCritic05@reviewworld.org
+password: ProsePass!531
+
+User 6:
+username: StorySeeker06@readerspace.com
+password: NovelNerd$634
+
+User 7:
+username: BookishBuff07@bookbin.net
+password: FictionFan#737
+
+User 8:
+username: ReviewRaven08@taletrail.org
+password: TaleTeller!840
+
+User 9:
+username: PlotPonderer09@literarylife.com
+password: LiteraryLuxe$943
+
+User 10:
+username: NarrativeNinja10@storyhub.net
+password: StoryScribe#046
