@@ -16,29 +16,6 @@ namespace OnlineBookStoreAPI.Controllers
             _context = context;
         }
 
-        // GET: api/Orders
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<Order>>> GetOrders()
-        {
-            return await _context.Orders
-                .Include(o => o.OrderDetails)
-                .Select(o => new Order
-                {
-                    Id = o.Id,
-                    UserId = o.UserId,
-                    OrderDate = o.OrderDate,
-                    TotalPrice = o.TotalPrice,
-                    OrderDetails = o.OrderDetails.Select(od => new OrderDetail
-                    {
-                        Id = od.Id,
-                        BookId = od.BookId,
-                        Quantity = od.Quantity
-                    }).ToList()
-                })
-                .ToListAsync();
-        }
-
-        // GET: api/Orders/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Order>> GetOrder(Guid id)
         {
@@ -66,7 +43,6 @@ namespace OnlineBookStoreAPI.Controllers
             return orderDto;
         }
 
-        // POST: api/Orders
         [HttpPost]
         public async Task<ActionResult<Order>> PostOrder(Order orderDto)
         {

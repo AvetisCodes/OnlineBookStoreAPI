@@ -3,6 +3,7 @@ using OnlineBookStoreAPI.Data;
 using Microsoft.AspNetCore.Identity;
 using OnlineBookStoreAPI.Data.Models;
 using Microsoft.OpenApi.Models;
+using OnlineBookStoreAPI.Business;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,6 +17,7 @@ builder.Services.AddIdentity<User, IdentityRole<Guid>>()
         .AddDefaultTokenProviders();
 
 builder.Services.AddScoped<SignInManager<User>>();
+builder.Services.AddScoped<BookService>();
 
 builder.Services.AddAuthentication();
 

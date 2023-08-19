@@ -1,28 +1,42 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using OnlineBookStoreAPI.Data.Models;
 using OnlineBookStoreAPI.Data;
+using Microsoft.EntityFrameworkCore;
+using System.Collections.Immutable;
+using OnlineBookStoreAPI.Business;
 
 [Route("api/[controller]")]
 [ApiController]
+
+/*
+    We are going to assume that books can only be created by the admin of the site and that admin
+    site is not part of this application. So regular users - logged in or otherwise can access a specific book
+    or all the books.
+*/
+
 public class BooksController : ControllerBase
 {
-    private readonly AppDbContext _context;
+    private readonly AppDbContext context;
+    private readonly BookService bookService;
 
-    public BooksController(AppDbContext context)
+    public BooksController(AppDbContext context, BookService bookService)
     {
-        _context = context;
+        this.context = context;
+        this.bookService = bookService;
     }
 
-    [HttpGet]
-    public ActionResult<IEnumerable<Book>> GetBooks()
+    [HttpGet("TopBooks/{topNumber}")]
+    public async Task<ActionResult<IEnumerable<Book>>> GetTopBooks(int topNumber)
     {
-        return _context.Books.ToList();
+        var topBooks = await bookService.GetTopBooksAsync(topNumber);
+
+        return topBooks;
     }
 
     [HttpGet("{id}")]
     public ActionResult<Book> GetBook(Guid id)
     {
-        var book = _context.Books.FirstOrDefault(b => b.Id == id);
+        var book = context.Books.FirstOrDefault(b => b.Id == id);
 
         if (book == null)
         {
