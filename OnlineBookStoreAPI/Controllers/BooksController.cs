@@ -2,6 +2,7 @@
 using OnlineBookStoreAPI.Data.Models;
 using OnlineBookStoreAPI.Data;
 using OnlineBookStoreAPI.Business;
+using Microsoft.EntityFrameworkCore;
 
 [Route("api/[controller]")]
 [ApiController]
@@ -32,9 +33,9 @@ public class BooksController : ControllerBase
     }
 
     [HttpGet("{id}")]
-    public ActionResult<Book> GetBook(Guid id)
+    public async Task<ActionResult<Book>> GetBook(Guid id)
     {
-        var book = context.Books.FirstOrDefault(b => b.Id == id);
+        var book = await context.Books.FirstOrDefaultAsync(b => b.Id == id);
 
         if (book == null)
         {
