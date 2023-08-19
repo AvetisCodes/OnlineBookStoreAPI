@@ -4,6 +4,7 @@ using OnlineBookStoreAPI.Data.Models;
 using OnlineBookStoreAPI.Data;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
+using OnlineBookStoreAPI.Data.DTOs;
 
 namespace OnlineBookStoreAPI.Controllers
 {
@@ -49,63 +50,60 @@ namespace OnlineBookStoreAPI.Controllers
             return Ok(reviews);
         }
 
-        // 3. Endpoint for authorized users to post or edit their review
-        //[Authorize]
-        //[HttpPost("MyReview")]
-        //public async Task<ActionResult<Review>> PostOrEditUserReview(ReviewDTO reviewDto)
-        //{
-        //    var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        [Authorize]
+        [HttpPost("MyReview")]
+        public async Task<ActionResult<Review>> PostUserReview(ReviewDTO reviewDto)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-        //    var existingReview = await _context.Reviews
-        //        .FirstOrDefaultAsync(r => r.BookId == reviewDto.BookId && r.UserId == userId);
+            if (userId is null)
+            {
+                return Unauthorized();
+            }
 
-        //    if (existingReview == null)
-        //    {
-        //        var reviewModel = new Review
-        //        {
-        //            Id = Guid.NewGuid(),
-        //            BookId = reviewDto.BookId,
-        //            UserId = userId,
-        //            Rating = reviewDto.Rating,
-        //            Text = reviewDto.Text
-        //        };
+            var reviewModel = new Review
+            {
+                Id = Guid.NewGuid(),
+                BookId = reviewDto.BookId,
+                UserId = new Guid(userId),
+                Rating = reviewDto.Rating,
+                Text = reviewDto.Text
+            };
 
-        //        _context.Reviews.Add(reviewModel);
-        //    }
-        //    else
-        //    {
-        //        existingReview.Rating = reviewDto.Rating;
-        //        existingReview.Text = reviewDto.Text;
-        //    }
+            await context.SaveChangesAsync();
 
-        //    await _context.SaveChangesAsync();
+            var myNewReview = await context.Reviews.FirstOrDefaultAsync(r => r.Id == reviewModel.Id);
 
-        //    return Ok(reviewDto);
-        //}
+            return Ok(reviewDto);
+        }
 
-        // 4. Endpoint for authorized users to delete their review
-        //[Authorize]
-        //[HttpDelete("{id}")]
-        //public async Task<IActionResult> DeleteUserReview(Guid id)
-        //{
-        //    var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        [Authorize]
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteUserReview(Guid id)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-        //    var review = await _context.Reviews.FindAsync(id);
+            if (userId is null)
+            {
+                return Unauthorized();
+            }
 
-        //    if (review == null)
-        //    {
-        //        return NotFound();
-        //    }
+            var review = await context.Reviews.FindAsync(id);
 
-        //    if (review.UserId != userId)
-        //    {
-        //        return Forbid();
-        //    }
+            if (review == null)
+            {
+                return NotFound();
+            }
 
-        //    _context.Reviews.Remove(review);
-        //    await _context.SaveChangesAsync();
+            if (review.UserId != new Guid(userId))
+            {
+                return Forbid();
+            }
 
-        //    return NoContent();
-        //}
+            context.Reviews.Remove(review);
+            await context.SaveChangesAsync();
+
+            return NoContent();
+        }
     }
 }
