@@ -1,8 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using OnlineBookStoreAPI.Data.Models;
 using OnlineBookStoreAPI.Data;
-using Microsoft.EntityFrameworkCore;
-using System.Collections.Immutable;
 using OnlineBookStoreAPI.Business;
 
 [Route("api/[controller]")]
@@ -10,8 +8,8 @@ using OnlineBookStoreAPI.Business;
 
 /*
     We are going to assume that books can only be created by the admin of the site and that admin
-    site is not part of this application. So regular users - logged in or otherwise can access a specific book
-    or all the books.
+    site is not part of this application. So users - logged in or otherwise can access a specific book
+    or top books.
 */
 
 public class BooksController : ControllerBase
