@@ -19,6 +19,21 @@ namespace OnlineBookStoreAPI.Controllers
             this.context = context;
         }
 
+        [HttpGet("Book/{bookId}")]
+        public async Task<ActionResult<IEnumerable<Review>>> GetBookReviews(Guid bookId)
+        {
+            var currentBook = await context.Books.SingleOrDefaultAsync(b => b.Id == bookId);
+
+            if (currentBook is null)
+            {
+                return NotFound();
+            }
+
+            var reviews = await context.Reviews.Where(r => r.BookId == bookId).ToListAsync();
+
+            return Ok(reviews);
+        }
+
         [Authorize]
         [HttpGet("MyReviews")]
         public async Task<ActionResult<IEnumerable<Review>>> GetUserReviews()
@@ -31,21 +46,6 @@ namespace OnlineBookStoreAPI.Controllers
             }
 
             var reviews = await context.Reviews.Where(r => r.UserId == new Guid(userId)).ToListAsync();
-
-            return Ok(reviews);
-        }
-
-        [HttpGet("Book/{bookId}")]
-        public async Task<ActionResult<IEnumerable<Review>>> GetBookReviews(Guid bookId)
-        {
-            var currentBook = await context.Books.SingleOrDefaultAsync(b => b.Id == bookId);
-            
-            if (currentBook is null)
-            {
-                return NotFound();
-            }
-
-            var reviews = await context.Reviews.Where(r => r.BookId == bookId).ToListAsync();
 
             return Ok(reviews);
         }
