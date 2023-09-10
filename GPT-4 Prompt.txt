@@ -44,7 +44,6 @@ ReviewsController
 
 More information
 - Use EF Core database first approach. Define entity relationships in the DBContext however also create table definitions for each entity.
-- SQLite will be used so adapt all of the SQL code for that.
 - There will be 5 models:
 	- Book
 		- Id
@@ -79,6 +78,7 @@ More information
 	- User (Identity<Guid>)
 		- Orders
 		- Reviews
+- Write SQLite Create script for 5 entities listed above
 - There will be 5 DTOs
 	- LoginDTO
 		- Email, Required
