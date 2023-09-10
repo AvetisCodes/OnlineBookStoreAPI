@@ -27,14 +27,14 @@ OrdersController
 	- Calculate total price based on book price and orderDetail quantity 
 
 ReviewsController
-- /api/Reviews/Book/{bookId} [GET] [Authorize] (Book)
+- /api/Reviews/Book/{bookId} [GET] (Book)
 	- Takes bookId as Guid
 	- If given book does not exist return NotFound
 	- If book is found return book reviews
-- /api/Reviews/MyReviews [GET] [Authorize] (MyReviews)
+- /api/Reviews/MyReviews [GET] [Authorize]
 	- Retreive the user if not logged in return unauthorized
 	- If logged in return reviews of the logged in user
-- /api/Reviews/MyReviews/{bookId} [POST] [Authorize] (MyReview)
+- /api/Reviews/MyReviews/{bookId} [POST] [Authorize]
 	- Retreive the user if not logged in return unauthorized
 	- Takes bookId as Guid
 	- Takes ReviewDTO
