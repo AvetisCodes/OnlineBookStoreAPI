@@ -9,7 +9,7 @@ CREATE TABLE Books (
 CREATE TABLE Orders (
     Id TEXT NOT NULL PRIMARY KEY,
     UserId TEXT,
-    OrderDate DATETIME NOT NULL, -- Usually an ISO-8601 format date string
+    OrderDate TEXT NOT NULL, -- Usually an ISO-8601 format date string
     TotalPrice REAL NOT NULL,
     FOREIGN KEY (UserId) REFERENCES Users(Id)
 );
