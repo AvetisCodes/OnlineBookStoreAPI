@@ -2,22 +2,22 @@ CREATE TABLE Books (
     Id TEXT NOT NULL PRIMARY KEY,
     Title TEXT NOT NULL,
     Author TEXT NOT NULL,
-    ISBN TEXT UNIQUE,
+    ISBN TEXT NOT NULL UNIQUE,
     Price REAL NOT NULL
 );
 
 CREATE TABLE Orders (
     Id TEXT NOT NULL PRIMARY KEY,
     UserId TEXT,
-    OrderDate TEXT NOT NULL, -- Usually an ISO-8601 format date string
+    OrderDate DATETIME NOT NULL, -- Usually an ISO-8601 format date string
     TotalPrice REAL NOT NULL,
     FOREIGN KEY (UserId) REFERENCES Users(Id)
 );
 
 CREATE TABLE OrderDetails (
     Id TEXT NOT NULL PRIMARY KEY,
-    OrderId TEXT,
-    BookId TEXT,
+    OrderId TEXT NOT NULL,
+    BookId TEXT NOT NULL,
     Quantity INTEGER NOT NULL,
     FOREIGN KEY (OrderId) REFERENCES Orders(Id),
     FOREIGN KEY (BookId) REFERENCES Books(Id)
@@ -25,8 +25,8 @@ CREATE TABLE OrderDetails (
 
 CREATE TABLE Reviews (
     Id TEXT NOT NULL PRIMARY KEY,
-    BookId TEXT,
-    UserId TEXT,
+    BookId TEXT NOT NULL,
+    UserId TEXT NOT NULL,
     Rating INTEGER NOT NULL, -- Assuming a rating out of 5 or 10
     Text TEXT,
     FOREIGN KEY (BookId) REFERENCES Books(Id),
