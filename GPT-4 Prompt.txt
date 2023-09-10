@@ -84,7 +84,21 @@ More information
 	- User (Identity<Guid>)
 		- Orders
 		- Reviews
-- Write SQLite Create script for 5 entities listed above
+- Write SQLite Create script for 5 entities listed above:
+	- Also build these 3 tables which are not going to be domain models:
+		- UserRoles
+			- UserId
+			- RoleId
+		- UserClaims
+			- Id
+			- UserId
+			- ClaimTtpe
+			- ClaimValue
+		- Roles
+			- Id
+			- Name
+			- NormalizedName
+			- ConcurrencyStamp
 - There will be 5 DTOs
 	- LoginDTO
 		- Email, Required
