@@ -57,33 +57,33 @@ More information
 		- Author
 		- ISBN
 		- Price
-		- OrderDetails (FK)
-		- Reviews (FK)
+		- OrderDetails (EF Core Navigational property, not present in SQL object)
+		- Reviews (EF Core Navigational property, not present in SQL object)
 	- Order
 		- Id (Guid)
 		- UserId
 		- OrderDate
 		- TotalPrice
-		- User (FK)
-		- OrderDetails (FK)
+		- User (EF Core Navigational property, not present in SQL object)
+		- OrderDetails (EF Core Navigational property, not present in SQL object)
 	- OrderDetails
 		- Id (Guid)
 		- OrderId
 		- BookId
 		- Quantity
-		- Book (FK)
-		- Order (FK)
+		- Book (EF Core Navigational property, not present in SQL object)
+		- Order (EF Core Navigational property, not present in SQL object)
 	- Review
 		- Id (Guid)
 		- BookId
 		- UserId
 		- Rating
 		- Text
-		- Book (FK)
-		- User (FK)
+		- Book (EF Core Navigational property, not present in SQL object)
+		- User (EF Core Navigational property, not present in SQL object)
 	- User (Identity<Guid>)
-		- Orders (FK)
-		- Reviews (FK)
+		- Orders (EF Core Navigational property, not present in SQL object)
+		- Reviews (EF Core Navigational property, not present in SQL object)
 - Write SQLite Create script for 5 entities listed above:
 	- Also build these 3 tables which are not going to be domain models:
 		- UserRoles
