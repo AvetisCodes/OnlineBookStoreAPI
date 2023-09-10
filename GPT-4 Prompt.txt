@@ -52,38 +52,38 @@ More information
 - Use EF Core database first approach. Define entity relationships in the DBContext however also create table definitions for each entity.
 - There will be 5 models:
 	- Book
-		- Id
+		- Id (Guide)
 		- Title
 		- Author
 		- ISBN
 		- Price
-		- OrderDetails
-		- Reviews
+		- OrderDetails (FK)
+		- Reviews (FK)
 	- Order
-		- Id
+		- Id (Guide)
 		- UserId
 		- OrderDate
 		- TotalPrice
-		- User
-		- OrderDetails
+		- User (FK)
+		- OrderDetails (FK)
 	- OrderDetails
-		- Id
+		- Id (Guide)
 		- OrderId
 		- BookId
 		- Quantity
-		- Book
-		- Order
+		- Book (FK)
+		- Order (FK)
 	- Review
-		- Id
+		- Id (Guide)
 		- BookId
 		- UserId
 		- Rating
 		- Text
-		- Book
-		- User
+		- Book (FK)
+		- User (FK)
 	- User (Identity<Guid>)
-		- Orders
-		- Reviews
+		- Orders (FK)
+		- Reviews (FK)
 - Write SQLite Create script for 5 entities listed above:
 	- Also build these 3 tables which are not going to be domain models:
 		- UserRoles
