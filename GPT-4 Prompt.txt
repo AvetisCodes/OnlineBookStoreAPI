@@ -52,7 +52,7 @@ More information
 - Use EF Core database first approach. Define entity relationships in the DBContext however also create table definitions for each entity.
 - There will be 5 models:
 	- Book
-		- Id (Guide)
+		- Id (Guid)
 		- Title
 		- Author
 		- ISBN
@@ -60,21 +60,21 @@ More information
 		- OrderDetails (FK)
 		- Reviews (FK)
 	- Order
-		- Id (Guide)
+		- Id (Guid)
 		- UserId
 		- OrderDate
 		- TotalPrice
 		- User (FK)
 		- OrderDetails (FK)
 	- OrderDetails
-		- Id (Guide)
+		- Id (Guid)
 		- OrderId
 		- BookId
 		- Quantity
 		- Book (FK)
 		- Order (FK)
 	- Review
-		- Id (Guide)
+		- Id (Guid)
 		- BookId
 		- UserId
 		- Rating
@@ -90,12 +90,12 @@ More information
 			- UserId
 			- RoleId
 		- UserClaims
-			- Id
+			- Id (Guid)
 			- UserId
 			- ClaimTtpe
 			- ClaimValue
 		- Roles
-			- Id
+			- Id (Guid)
 			- Name
 			- NormalizedName
 			- ConcurrencyStamp
