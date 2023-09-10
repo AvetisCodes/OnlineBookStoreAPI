@@ -1,0 +1,99 @@
+Build a ASN.NET Web API application with the following endpoints:
+
+AuthController
+- /api/Auth/Register [POST]
+	- Uses UserManager<User> for registration
+	- Takes RegisterDTO
+- /api/Auth/Login [POST]
+	- Uses SignInManager<User> for login 
+	- Takes LoginDTO
+
+BooksController
+- /api/Books/TopBooks/{topNumber} [GET]
+	- Takes topNumber as integer and can be >= 1 and <= 5
+	- Took books are based on the amount of reviews and the average review count. So average review number of a single book multiplied by its actual review count would give a score and based on that top 5 books would be chosen. Perform this logic in a separate service called BookService and use DI to inject into BooksController.
+- /api/Books/{id} [GET]
+	- Gets the given book or returns NotFound
+
+OrdersController
+- /api/Orders/MyOrders [GET] [Authorize]
+	- If user is not logged in return unauthorized
+	- Otherwise return all of the orders of the logged in user
+- /api/Orders/MyOrders [POST] [Authorize]
+	- Takes OrderDTO
+	- If user is not logged in return unauthorized
+	- Make sure user is found
+	- Calculate total price based on book price and orderDetail quantity 
+
+ReviewsController
+- /api/Reviews/Book/{bookId} [GET] [Authorize] (Book)
+	- Takes bookId as Guid
+	- If given book does not exist return NotFound
+	- If book is found return book reviews
+- /api/Reviews/MyReviews [GET] [Authorize] (MyReviews)
+	- Retreive the user if not logged in return unauthorized
+	- If logged in return reviews of the logged in user
+- /api/Reviews/MyReviews/{bookId} [POST] [Authorize] (MyReview)
+	- Takes bookId as Guid
+	- Takes RegisterDTO
+- /api/Reviews/{Id} [DELETE] [Authorize]
+	- Takes reviewId as Guid
+	- If user is not logged in return unauthorized
+	- If review is not found return NotFound
+	- If logged in user is not the one who left the review return Forbid
+
+More information
+- Use EF Core database first approach. Define entity relationships in the DBContext however also create table definitions for each entity.
+- SQLite will be used so adapt all of the SQL code for that.
+- There will be 5 models:
+	- Book
+		- Id
+		- Title
+		- Author
+		- ISBN
+		- Price
+		- OrderDetails
+		- Reviews
+	- Order
+		- Id
+		- UserId
+		- OrderDate
+		- TotalPrice
+		- User
+		- OrderDetails
+	- OrderDetails
+		- Id
+		- OrderId
+		- BookId
+		- Quantity
+		- Book
+		- Order
+	- Review
+		- Id
+		- BookId
+		- UserId
+		- Rating
+		- Text
+		- Book
+		- User
+	- User (Identity<Guid>)
+		- Orders
+		- Reviews
+- There will be 5 DTOs
+	- LoginDTO
+		- Email, Required
+		- Password
+	- OrderDetailDTO
+		- BookId
+		- Quantity
+	- OrderDTO
+		- OrderDate
+		- OrderDetailDTOs
+	- RegisterDTO
+		- Email, Required
+		- Password, Min = 6, Max = 100
+		- ConfirmPassword, Needs to match to password
+	- ReviewDTO
+		- Rating
+		- Text
+- Add authentication for this API and use application cookie which lasts for 60 minutes
