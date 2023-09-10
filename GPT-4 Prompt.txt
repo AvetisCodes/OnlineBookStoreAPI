@@ -11,7 +11,8 @@ AuthController
 BooksController
 - /api/Books/TopBooks/{topNumber} [GET]
 	- Takes topNumber as integer and can be >= 1 and <= 5
-	- Took books are based on the amount of reviews and the average review count. So average review number of a single book multiplied by its actual review count would give a score and based on that top 5 books would be chosen. Perform this logic in a separate service called BookService and use DI to inject into BooksController.
+	- Top books are based on the amount of reviews and the average review count. So average review number of a single book multiplied by its actual review count would give a score and based on that top 5 books would be chosen
+	- Perform TopBook logic in a separate service called BookService and use DI to inject into BooksController
 - /api/Books/{id} [GET]
 	- Gets the given book or returns NotFound
 
@@ -34,11 +35,16 @@ ReviewsController
 	- Retreive the user if not logged in return unauthorized
 	- If logged in return reviews of the logged in user
 - /api/Reviews/MyReviews/{bookId} [POST] [Authorize] (MyReview)
+	- Retreive the user if not logged in return unauthorized
 	- Takes bookId as Guid
-	- Takes RegisterDTO
+	- Takes ReviewDTO
+	- Rating can only be between 0 and 5
+	- Make sure book being reviewed exists otherwise return NotFound
+	- Make sure logged in user exists
+	- If all is valid save user review and return saved review
 - /api/Reviews/{Id} [DELETE] [Authorize]
+	- Retreive the user if not logged in return unauthorized
 	- Takes reviewId as Guid
-	- If user is not logged in return unauthorized
 	- If review is not found return NotFound
 	- If logged in user is not the one who left the review return Forbid
 
