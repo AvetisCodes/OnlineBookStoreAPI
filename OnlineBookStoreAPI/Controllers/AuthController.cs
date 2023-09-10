@@ -16,7 +16,7 @@ public class AuthController : ControllerBase
         _signInManager = signInManager;
     }
 
-    [HttpPost("register")]
+    [HttpPost("Register")]
     public async Task<IActionResult> Register([FromBody] RegisterDTO model)
     {
         if (ModelState.IsValid)
@@ -35,7 +35,7 @@ public class AuthController : ControllerBase
         return BadRequest("Invalid payload.");
     }
 
-    [HttpPost("login")]
+    [HttpPost("Login")]
     public async Task<IActionResult> Login([FromBody] LoginDTO model)
     {
         if (ModelState.IsValid)
