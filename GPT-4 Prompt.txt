@@ -114,6 +114,6 @@ More information
 		- Password, [Required] [Min = 6, Max = 100]
 		- ConfirmPassword [Needs to match to password]
 	- ReviewDTO
-		- Rating
+		- Rating [Required] [Range(1, 5)]
 		- Text
 - Add authentication for this API and use application cookie which lasts for 60 minutes

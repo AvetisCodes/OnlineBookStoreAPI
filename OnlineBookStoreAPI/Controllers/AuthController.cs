@@ -32,7 +32,7 @@ public class AuthController : ControllerBase
             return BadRequest(result.Errors);
         }
 
-        return BadRequest("Invalid payload.");
+        return BadRequest("Invalid data.");
     }
 
     [HttpPost("Login")]
@@ -50,6 +50,6 @@ public class AuthController : ControllerBase
             return BadRequest("Invalid login attempt.");
         }
 
-        return BadRequest("Invalid payload.");
+        return BadRequest("Invalid data.");
     }
 }
