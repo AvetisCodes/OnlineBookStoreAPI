@@ -101,8 +101,8 @@ More information
 			- ConcurrencyStamp
 - There will be 5 DTOs
 	- LoginDTO
-		- Email, Required
-		- Password
+		- Email [Required]
+		- Password [Required]
 	- OrderDetailDTO
 		- BookId
 		- Quantity
@@ -110,9 +110,9 @@ More information
 		- OrderDate
 		- OrderDetailDTOs
 	- RegisterDTO
-		- Email, Required
-		- Password, Min = 6, Max = 100
-		- ConfirmPassword, Needs to match to password
+		- Email [Required]
+		- Password, [Required] [Min = 6, Max = 100]
+		- ConfirmPassword [Needs to match to password]
 	- ReviewDTO
 		- Rating
 		- Text
