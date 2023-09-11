@@ -77,6 +77,8 @@ namespace OnlineBookStoreAPI.Controllers
                     return NotFound("User not found.");
                 }
 
+                // Just to keep things simple we will not be checking if user left review previously and will allow multiple reviews
+
                 var reviewModel = new Review
                 {
                     Id = Guid.NewGuid(),
