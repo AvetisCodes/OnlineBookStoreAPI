@@ -104,7 +104,7 @@ More information
 		- Email [Required]
 		- Password [Required]
 	- OrderDetailDTO
-		- BookId
+		- BookId [Guid]
 		- Quantity
 	- OrderDTO
 		- OrderDate
