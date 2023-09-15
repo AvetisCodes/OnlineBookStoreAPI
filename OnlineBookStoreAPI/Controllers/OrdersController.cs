@@ -30,7 +30,7 @@ namespace OnlineBookStoreAPI.Controllers
                 return Unauthorized();
             }
 
-            var orders = await context.Orders.Include(o => o.OrderDetails).Where(r => r.UserId == new Guid(userId)).ToListAsync();
+            var orders = await context.Orders.Include(o => o.OrderDetails).Where(r => r.User.Id == new Guid(userId)).ToListAsync();
 
             return Ok(orders);
         }
@@ -60,7 +60,7 @@ namespace OnlineBookStoreAPI.Controllers
                 var books = await context.Books.Where(b => bookIds.Contains(b.Id)).ToDictionaryAsync(b => b.Id);
 
                 // Calculate TotalPrice based on actual book prices
-                double totalPrice = 0;
+                decimal totalPrice = 0;
                 var orderDetails = new List<OrderDetail>();
 
                 foreach (var orderDetailDto in orderDto.OrderDetailDTOs)

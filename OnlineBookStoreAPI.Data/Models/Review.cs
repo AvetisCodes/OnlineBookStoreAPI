@@ -4,10 +4,6 @@ public class Review
 {
     public Guid Id { get; set; }
     
-    public Guid BookId { get; private set; }
-    
-    public Guid UserId { get; private set; }
-    
     public int Rating { get; set; }
     
     public string Text { get; set; } = string.Empty;

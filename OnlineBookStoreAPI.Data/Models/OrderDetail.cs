@@ -4,10 +4,6 @@ public class OrderDetail
 {
     public Guid Id { get; set; }
     
-    public Guid OrderId { get; private set; }
-    
-    public Guid BookId { get; private set; }
-    
     public int Quantity { get; set; }
 
     public Book Book { get; set; } = new();

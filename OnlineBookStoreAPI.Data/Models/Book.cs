@@ -10,7 +10,7 @@ public class Book
 
     public string ISBN { get; set; } = string.Empty;
 
-    public double Price { get; set; }
+    public decimal Price { get; set; }
 
     public List<OrderDetail> OrderDetails { get; set; } = new();
 

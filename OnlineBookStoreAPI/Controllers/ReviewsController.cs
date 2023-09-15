@@ -29,7 +29,7 @@ namespace OnlineBookStoreAPI.Controllers
                 return NotFound();
             }
 
-            var reviews = await context.Reviews.Where(r => r.BookId == bookId).ToListAsync();
+            var reviews = await context.Reviews.Where(r => r.Book.Id == bookId).ToListAsync();
 
             return Ok(reviews);
         }
@@ -45,7 +45,7 @@ namespace OnlineBookStoreAPI.Controllers
                 return Unauthorized();
             }
 
-            var reviews = await context.Reviews.Where(r => r.UserId == new Guid(userId)).ToListAsync();
+            var reviews = await context.Reviews.Where(r => r.User.Id == new Guid(userId)).ToListAsync();
 
             return Ok(reviews);
         }
@@ -117,7 +117,7 @@ namespace OnlineBookStoreAPI.Controllers
                 return NotFound();
             }
 
-            if (review.UserId != new Guid(userId))
+            if (review.User.Id != new Guid(userId))
             {
                 return Forbid();
             }
