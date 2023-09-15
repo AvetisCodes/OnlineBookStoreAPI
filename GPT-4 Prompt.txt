@@ -81,7 +81,7 @@ More information
 		- Text
 		- Book (EF Core Navigational property, not present in SQL object)
 		- User (EF Core Navigational property, not present in SQL object)
-	- User (Identity<Guid>)
+	- User (inherits from Identity<Guid>)
 		- Orders (EF Core Navigational property, not present in SQL object)
 		- Reviews (EF Core Navigational property, not present in SQL object)
 - Write SQLite Create script for 5 entities listed above:
