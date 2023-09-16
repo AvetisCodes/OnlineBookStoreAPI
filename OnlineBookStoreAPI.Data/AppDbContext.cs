@@ -22,13 +22,11 @@ public class AppDbContext : IdentityDbContext<User, IdentityRole<Guid>, Guid>
         base.OnModelCreating(modelBuilder);
 
         modelBuilder.Entity<User>().ToTable("Users");
-        modelBuilder.Entity<User>().HasKey(e => e.Id);
         modelBuilder.Entity<IdentityUserClaim<Guid>>().ToTable("UserClaims");
         modelBuilder.Entity<IdentityUserRole<Guid>>().ToTable("UserRoles");
         modelBuilder.Entity<IdentityRole<Guid>>().ToTable("Roles");
 
         modelBuilder.Entity<Book>().ToTable("Books");
-        modelBuilder.Entity<Book>().HasKey(e => e.Id);
 
         modelBuilder.Entity<Order>().ToTable("Orders");
         modelBuilder.Entity<Order>().HasOne(o => o.User).WithMany(u => u.Orders);
