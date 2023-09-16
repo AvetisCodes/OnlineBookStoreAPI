@@ -21,25 +21,23 @@ public class AppDbContext : IdentityDbContext<User, IdentityRole<Guid>, Guid>
     {
         base.OnModelCreating(modelBuilder);
 
-        // User configuration
         modelBuilder.Entity<User>().ToTable("Users");
         modelBuilder.Entity<User>().HasKey(e => e.Id);
         modelBuilder.Entity<IdentityUserClaim<Guid>>().ToTable("UserClaims");
         modelBuilder.Entity<IdentityUserRole<Guid>>().ToTable("UserRoles");
         modelBuilder.Entity<IdentityRole<Guid>>().ToTable("Roles");
 
-        // Book configuration
         modelBuilder.Entity<Book>().ToTable("Books");
         modelBuilder.Entity<Book>().HasKey(e => e.Id);
 
-        // Order relationship
+        modelBuilder.Entity<Order>().ToTable("Orders");
         modelBuilder.Entity<Order>().HasOne(o => o.User).WithMany(u => u.Orders);
 
-        // OrderDetail relationship
+        modelBuilder.Entity<OrderDetail>().ToTable("OrderDetails");
         modelBuilder.Entity<OrderDetail>().HasOne(od => od.Order).WithMany(o => o.OrderDetails);
         modelBuilder.Entity<OrderDetail>().HasOne(od => od.Book).WithMany(o => o.OrderDetails);
 
-        // Review relationship
+        modelBuilder.Entity<Review>().ToTable("Reviews");
         modelBuilder.Entity<Review>().HasOne(r => r.Book).WithMany(b => b.Reviews);
         modelBuilder.Entity<Review>().HasOne(r => r.User).WithMany(u => u.Reviews);
     }
