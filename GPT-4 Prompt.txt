@@ -11,7 +11,7 @@ AuthController
 BooksController
 - /api/Books/TopBooks/{topNumber} [GET]
 	- Takes topNumber as integer and can be >= 1 and <= 5
-	- Top books are based on the amount of reviews and the average review count. So average review number of a single book multiplied by its actual review count would give a score and based on that top 5 books would be chosen
+	- Top books are based on the amount of reviews and the average review count. So average review number of a single book multiplied by its actual review count would give a score and based on that given amount of top books would be returned
 	- Perform TopBook logic in a separate service called BookService and use DI to inject into BooksController
 - /api/Books/{id} [GET]
 	- Gets the given book or returns NotFound
