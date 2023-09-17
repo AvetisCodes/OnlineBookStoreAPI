@@ -15,9 +15,9 @@ namespace OnlineBookStoreAPI.Business
 
         public async Task<List<Book>> GetTopBooksAsync(int topNumber)
         {
-            if (topNumber < 0 || topNumber > 5)
+            if (topNumber < 1 || topNumber > 5)
             {
-                throw new InvalidDataException("Top number has to be greater than 0 and less than 5.");
+                throw new InvalidDataException("Top number can only be >= 1 and <= 5.");
             }
 
             var topBooks = await _context.Books
