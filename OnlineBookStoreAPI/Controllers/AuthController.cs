@@ -19,37 +19,39 @@ public class AuthController : ControllerBase
     [HttpPost("Register")]
     public async Task<IActionResult> Register([FromBody] RegisterDTO model)
     {
-        if (ModelState.IsValid)
+        if (!ModelState.IsValid)
         {
-            var user = new User { UserName = model.Email, Email = model.Email };
-            var result = await _userManager.CreateAsync(user, model.Password);
+            return BadRequest(ModelState);
+        }
+            
+        var user = new User { UserName = model.Email, Email = model.Email };
+        var result = await _userManager.CreateAsync(user, model.Password);
 
-            if (result.Succeeded)
-            {
-                return Ok("User registered successfully.");
-            }
-
+        if (!result.Succeeded)
+        {
             return BadRequest(result.Errors);
         }
 
-        return BadRequest("Invalid data.");
+        await _signInManager.SignInAsync(user, false);
+
+        return Ok();
     }
 
     [HttpPost("Login")]
     public async Task<IActionResult> Login([FromBody] LoginDTO model)
     {
-        if (ModelState.IsValid)
+        if (!ModelState.IsValid)
         {
-            var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, false, false);
-
-            if (result.Succeeded)
-            {
-                return Ok("Logged in successfully.");
-            }
-
-            return BadRequest("Invalid login attempt.");
+            return BadRequest(ModelState);
         }
 
-        return BadRequest("Invalid data.");
+        var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, false, false);
+
+        if (!result.Succeeded)
+        {
+            return Unauthorized();
+        }
+        
+        return Ok();
     }
 }
