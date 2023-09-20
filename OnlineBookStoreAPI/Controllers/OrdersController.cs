@@ -5,6 +5,7 @@ using OnlineBookStoreAPI.Data;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 using OnlineBookStoreAPI.Data.DTOs;
+using Microsoft.AspNetCore.Identity;
 
 namespace OnlineBookStoreAPI.Controllers
 {
@@ -13,24 +14,26 @@ namespace OnlineBookStoreAPI.Controllers
     public class OrdersController : ControllerBase
     {
         private readonly AppDbContext context;
+        private readonly UserManager<User> userManager;
 
-        public OrdersController(AppDbContext context)
+        public OrdersController(AppDbContext context, UserManager<User> userManager)
         {
             this.context = context;
+            this.userManager = userManager;
         }
 
         [Authorize]
         [HttpGet("MyOrders")]
         public async Task<ActionResult<IEnumerable<Order>>> GetUserOrders()
         {
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var user = await userManager.GetUserAsync(User);
 
-            if (userId is null)
+            if (user == null)
             {
                 return Unauthorized();
             }
 
-            var orders = await context.Orders.Include(o => o.OrderDetails).Where(r => r.User.Id == new Guid(userId)).ToListAsync();
+            var orders = await context.Orders.Where(r => r.User.Id == user.Id).ToListAsync();
 
             return Ok(orders);
         }
@@ -39,65 +42,51 @@ namespace OnlineBookStoreAPI.Controllers
         [HttpPost("MyOrders")]
         public async Task<ActionResult<Order>> PostOrder(OrderDTO orderDto)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-                if (userId is null)
-                {
-                    return Unauthorized();
-                }
-
-                var currentUserModel = await context.Users.FindAsync(new Guid(userId));
-
-                if (currentUserModel == null)
-                {
-                    return NotFound("User not found.");
-                }
-
-                // Fetch actual books based on BookId
-                var bookIds = orderDto.OrderDetailDTOs.Select(od => od.BookId).ToList();
-                var books = await context.Books.Where(b => bookIds.Contains(b.Id)).ToDictionaryAsync(b => b.Id);
-
-                // Calculate TotalPrice based on actual book prices
-                decimal totalPrice = 0;
-                var orderDetails = new List<OrderDetail>();
-
-                foreach (var orderDetailDto in orderDto.OrderDetailDTOs)
-                {
-                    if (!books.ContainsKey(orderDetailDto.BookId))
-                    {
-                        return BadRequest($"Book with ID {orderDetailDto.BookId} not found.");
-                    }
-
-                    var book = books[orderDetailDto.BookId];
-                    totalPrice += book.Price * orderDetailDto.Quantity;
-
-                    orderDetails.Add(new OrderDetail
-                    {
-                        Book = book,
-                        Quantity = orderDetailDto.Quantity
-                    });
-                }
-
-                var orderModel = new Order
-                {
-                    Id = Guid.NewGuid(),
-                    User = currentUserModel,
-                    OrderDate = orderDto.OrderDate,
-                    TotalPrice = totalPrice,
-                    OrderDetails = orderDetails
-                };
-
-                context.Orders.Add(orderModel);
-                await context.SaveChangesAsync();
-
-                var foundOrder = await context.Orders.Include(o => o.OrderDetails).SingleOrDefaultAsync(r => r.Id == orderModel.Id);
-
-                return Ok(foundOrder);
+                return BadRequest("Invalid data.");
             }
 
-            return BadRequest("Invalid data.");
+            var user = await userManager.GetUserAsync(User);
+
+            if (user == null)
+            {
+                return Unauthorized();
+            }
+
+            var order = new Order
+            {
+                Id = Guid.NewGuid(),
+                OrderDate = orderDto.OrderDate,
+                User = user,
+            };
+
+            foreach (var orderDetailDto in orderDto.OrderDetailDTOs)
+            {
+                var book = context.Books.Find(orderDetailDto.BookId);
+
+                if (book == null)
+                {
+                    return BadRequest($"No book found with ID {orderDetailDto.BookId}");
+                }
+
+                var orderDetail = new OrderDetail
+                {
+                    Id = Guid.NewGuid(),
+                    Book = book,
+                    Quantity = orderDetailDto.Quantity,
+                };
+
+                order.OrderDetails.Add(orderDetail);
+                order.TotalPrice += book.Price * orderDetailDto.Quantity;
+            }
+
+            context.Orders.Add(order);
+            await context.SaveChangesAsync();
+
+            var savedOrder = await context.Orders.FirstOrDefaultAsync(o => o.Id == order.Id);
+
+            return Ok(savedOrder);
         }
     }
 }
