@@ -39,7 +39,7 @@ namespace OnlineBookStoreAPI.Controllers
 
         [Authorize]
         [HttpPost("MyOrders")]
-        public async Task<ActionResult<Order>> PostOrder(OrderDTO orderDto)
+        public async Task<ActionResult<Order>> PostOrder([FromBody] OrderDTO orderDto)
         {
             if (!ModelState.IsValid)
             {
