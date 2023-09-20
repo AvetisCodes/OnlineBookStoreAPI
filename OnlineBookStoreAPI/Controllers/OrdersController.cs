@@ -3,7 +3,6 @@ using Microsoft.EntityFrameworkCore;
 using OnlineBookStoreAPI.Data.Models;
 using OnlineBookStoreAPI.Data;
 using Microsoft.AspNetCore.Authorization;
-using System.Security.Claims;
 using OnlineBookStoreAPI.Data.DTOs;
 using Microsoft.AspNetCore.Identity;
 
