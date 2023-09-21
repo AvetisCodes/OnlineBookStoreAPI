@@ -3,8 +3,8 @@ using Microsoft.EntityFrameworkCore;
 using OnlineBookStoreAPI.Data.Models;
 using OnlineBookStoreAPI.Data;
 using Microsoft.AspNetCore.Authorization;
-using System.Security.Claims;
 using OnlineBookStoreAPI.Data.DTOs;
+using Microsoft.AspNetCore.Identity;
 
 namespace OnlineBookStoreAPI.Controllers
 {
@@ -13,10 +13,12 @@ namespace OnlineBookStoreAPI.Controllers
     public class ReviewsController : ControllerBase
     {
         private readonly AppDbContext context;
+        private readonly UserManager<User> userManager;
 
-        public ReviewsController(AppDbContext context)
+        public ReviewsController(AppDbContext context, UserManager<User> userManager)
         {
             this.context = context;
+            this.userManager = userManager;
         }
 
         [HttpGet("Book/{bookId}")]
@@ -38,14 +40,14 @@ namespace OnlineBookStoreAPI.Controllers
         [HttpGet("MyReviews")]
         public async Task<ActionResult<IEnumerable<Review>>> GetUserReviews()
         {
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var currentUser = await userManager.GetUserAsync(User);
 
-            if (userId is null)
+            if (currentUser == null)
             {
                 return Unauthorized();
             }
 
-            var reviews = await context.Reviews.Where(r => r.User.Id == new Guid(userId)).ToListAsync();
+            var reviews = await context.Reviews.Where(r => r.User.Id == currentUser.Id).ToListAsync();
 
             return Ok(reviews);
         }
@@ -56,9 +58,9 @@ namespace OnlineBookStoreAPI.Controllers
         {
             if (ModelState.IsValid)
             {
-                var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                var currentUser = await userManager.GetUserAsync(User);
 
-                if (userId is null)
+                if (currentUser == null)
                 {
                     return Unauthorized();
                 }
@@ -70,20 +72,13 @@ namespace OnlineBookStoreAPI.Controllers
                     return NotFound("Book not found.");
                 }
 
-                var currentUserModel = await context.Users.FindAsync(new Guid(userId));
-
-                if (currentUserModel == null)
-                {
-                    return NotFound("User not found.");
-                }
-
                 // Just to keep things simple we will not be checking if user left review previously and will allow multiple reviews
 
                 var reviewModel = new Review
                 {
                     Id = Guid.NewGuid(),
                     Book = existingBook,
-                    User = currentUserModel,
+                    User = currentUser,
                     Rating = reviewDto.Rating,
                     Text = reviewDto.Text
                 };
@@ -103,9 +98,9 @@ namespace OnlineBookStoreAPI.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteUserReview(Guid id)
         {
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var currentUser = await userManager.GetUserAsync(User);
 
-            if (userId is null)
+            if (currentUser == null)
             {
                 return Unauthorized();
             }
@@ -117,7 +112,7 @@ namespace OnlineBookStoreAPI.Controllers
                 return NotFound();
             }
 
-            if (review.User.Id != new Guid(userId))
+            if (review.User.Id != currentUser.Id)
             {
                 return Forbid();
             }
