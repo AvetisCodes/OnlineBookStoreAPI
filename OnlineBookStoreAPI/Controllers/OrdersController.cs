@@ -53,6 +53,10 @@ namespace OnlineBookStoreAPI.Controllers
                 return Unauthorized();
             }
 
+            // Fetch actual books based on BookId
+            var bookIds = orderDto.OrderDetailDTOs.Select(od => od.BookId).ToList();
+            var booksDictionary = await context.Books.Where(b => bookIds.Contains(b.Id)).ToDictionaryAsync(b => b.Id);
+
             var order = new Order
             {
                 Id = Guid.NewGuid(),
@@ -62,12 +66,12 @@ namespace OnlineBookStoreAPI.Controllers
 
             foreach (var orderDetailDto in orderDto.OrderDetailDTOs)
             {
-                var book = context.Books.Find(orderDetailDto.BookId);
-
-                if (book == null)
+                if (!booksDictionary.ContainsKey(orderDetailDto.BookId))
                 {
                     return BadRequest($"No book found with ID {orderDetailDto.BookId}");
                 }
+
+                var book = booksDictionary[orderDetailDto.BookId];
 
                 var orderDetail = new OrderDetail
                 {
