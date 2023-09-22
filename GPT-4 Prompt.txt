@@ -37,7 +37,7 @@ ReviewsController
 	- If user is not logged in return unauthorized
 	- Takes bookId as Guid
 	- Takes ReviewDTO
-	- Rating can only be between 0 and 5
+	- Rating can only be between 1 and 5
 	- Make sure book being reviewed exists otherwise return NotFound
 	- If all is valid save user review and return saved review
 - /api/Reviews/{Id} [DELETE] [Authorize]
