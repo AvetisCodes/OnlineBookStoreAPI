@@ -23,7 +23,6 @@ OrdersController
 - /api/Orders/MyOrders [POST] [Authorize]
 	- Takes OrderDTO
 	- If user is not logged in return unauthorized
-	- Make sure user is found
 	- Calculate total price based on book price and orderDetail quantity 
 
 ReviewsController
@@ -32,18 +31,17 @@ ReviewsController
 	- If given book does not exist return NotFound
 	- If book is found return book reviews
 - /api/Reviews/MyReviews [GET] [Authorize]
-	- Retreive the user if not logged in return unauthorized
-	- If logged in return reviews of the logged in user
+	- If user is not logged in return unauthorized
+	- If authorized then return reviews of the logged in user
 - /api/Reviews/MyReviews/{bookId} [POST] [Authorize]
-	- Retreive the user if not logged in return unauthorized
+	- If user is not logged in return unauthorized
 	- Takes bookId as Guid
 	- Takes ReviewDTO
 	- Rating can only be between 0 and 5
 	- Make sure book being reviewed exists otherwise return NotFound
-	- Make sure logged in user exists
 	- If all is valid save user review and return saved review
 - /api/Reviews/{Id} [DELETE] [Authorize]
-	- Retreive the user if not logged in return unauthorized
+	- If user is not logged in return unauthorized
 	- Takes reviewId as Guid
 	- If review is not found return NotFound
 	- If logged in user is not the one who left the review return Forbid
